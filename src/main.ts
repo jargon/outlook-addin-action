@@ -1,5 +1,6 @@
-import * as core from '@actions/core'
-import { wait } from './wait.js'
+import * as core from "@actions/core"
+import { Config } from "./transformerTypes.js"
+import { transformManifest } from "./transformer.js"
 
 /**
  * The main function for the action.
@@ -7,21 +8,51 @@ import { wait } from './wait.js'
  * @returns Resolves when the action is complete.
  */
 export async function run(): Promise<void> {
-  try {
-    const ms: string = core.getInput('milliseconds')
+    try {
+        const manifestPath = core.getInput("manifestPath", { required: true })
+        const outputPath = core.getInput("outputPath", { required: true })
 
-    // Debug logs are only output if the `ACTIONS_STEP_DEBUG` secret is true
-    core.debug(`Waiting ${ms} milliseconds ...`)
+        const serverHost = core.getInput("webappHost", { required: true })
+        const serverPort = core.getInput("webappPort", { required: false })
+        const serverPath = normalizeServerPath(
+            core.getInput("webappPath", { required: true })
+        )
 
-    // Log the current timestamp, wait, then log the new timestamp
-    core.debug(new Date().toTimeString())
-    await wait(parseInt(ms, 10))
-    core.debug(new Date().toTimeString())
+        const azureAppId = core.getInput("azureAppId", { required: false })
+        const azureAppUri = core.getInput("azureAppUri", { required: false })
 
-    // Set outputs for other workflow steps to use
-    core.setOutput('time', new Date().toTimeString())
-  } catch (error) {
-    // Fail the workflow run if an error occurs
-    if (error instanceof Error) core.setFailed(error.message)
-  }
+        const config: Config = {
+            manifestPath,
+            outputPath,
+            serverHost,
+            serverPort,
+            serverPath,
+            azureAppId,
+            azureAppUri
+        }
+
+        await transformManifest(config)
+
+        // Set outputs for other workflow steps to use
+        core.setOutput("outputPath", config.outputPath)
+    } catch (error) {
+        // Fail the workflow run if an error occurs
+        if (error instanceof Error) core.setFailed(error.message)
+    }
+}
+
+function normalizeServerPath(serverPath: string) {
+    let path = serverPath
+
+    // Ensure starting slash
+    if (!path.startsWith("/")) {
+        path = `/${path}`
+    }
+
+    // Remove trailing slash
+    if (path.endsWith("/")) {
+        path = path.slice(0, -1)
+    }
+
+    return path
 }

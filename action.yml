@@ -1,24 +1,41 @@
-name: The name of your action here
-description: Provide a description here
-author: Your name or organization here
+name: outlook-addin-action
+description: GitHub action for working with Outlook web addins
+author: jargon
 
 # Add your action's branding here. This will appear on the GitHub Marketplace.
 branding:
-  icon: heart
-  color: red
+    icon: heart
+    color: red
 
 # Define your inputs here.
 inputs:
-  milliseconds:
-    description: Your input description here
-    required: true
-    default: '1000'
+    manifestPath:
+        description: Path to the addin manifest XML file
+        required: true
+    outputPath:
+        description: Path where action will write the transformed manifest
+        required: true
+    webappHost:
+        description: Server host where the Outlook webapp is hosted
+        required: true
+    webappPort:
+        description: Server port where the Outlook webapp is hosted
+        required: false
+    webappPath:
+        description: Server path where the Outlook webapp is hosted
+        required: true
+    azureAppId:
+        description: Application ID for the Azure app registration for the addin
+        required: false
+    azureAppUri:
+        description:
+            Application ID URL for the Azure app registration for the addin
 
 # Define your outputs here.
 outputs:
-  time:
-    description: Your output description here
+    outputPath:
+        description: Path to the transformed manifest
 
 runs:
-  using: node24
-  main: dist/index.js
+    using: node24
+    main: dist/index.js
