@@ -27,6 +27,9 @@ inputs:
     addinAppId:
         description: Office addin ID
         required: true
+    addinAppName:
+        description: Name of Office addin
+        required: false
     azureAppId:
         description: Application ID for the Azure app registration for the addin
         required: false

@@ -12,7 +12,7 @@ export function printPathInfo(config: PathConfig) {
 export function printAddinInfo(manifest: Manifest) {
     const app = manifest.OfficeApp
     const displayName = getDisplayName(manifest)
-    core.info(`Transforming Outlook web addin:`)
+    core.info(`Addin info:`)
     core.info(`    ID: ${app.Id}`)
     core.info(`    Name: ${displayName.$.DefaultValue}`)
 }

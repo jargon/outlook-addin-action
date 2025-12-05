@@ -19,6 +19,8 @@ export async function run(): Promise<void> {
         )
 
         const addinAppId = core.getInput("addinAppId", { required: true })
+        const addinAppName = core.getInput("addinAppName", { required: false })
+
         const azureAppId = core.getInput("azureAppId", { required: false })
         const azureAppUri = core.getInput("azureAppUri", { required: false })
 
@@ -29,6 +31,7 @@ export async function run(): Promise<void> {
             serverPort,
             serverPath,
             addinAppId,
+            addinAppName,
             azureAppId,
             azureAppUri
         }

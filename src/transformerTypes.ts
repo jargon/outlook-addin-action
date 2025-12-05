@@ -11,6 +11,7 @@ export type ServerConfig = Readonly<{
 
 export type AddinConfig = Readonly<{
     addinAppId: string
+    addinAppName?: string
 }>
 
 export type AzureConfig = Readonly<{

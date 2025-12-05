@@ -65,6 +65,9 @@ function rewriteAddinInfo(manifest: Manifest, config: AddinConfig) {
     printAddinInfo(manifest)
 
     manifest.OfficeApp.Id = config.addinAppId
+    if (config.addinAppName) {
+        manifest.OfficeApp.DisplayName[0].$.DefaultValue = config.addinAppName
+    }
 
     core.info(`Transformed`)
     printAddinInfo(manifest)
