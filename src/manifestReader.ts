@@ -5,6 +5,10 @@ export function getDisplayName(manifest: Manifest) {
     return manifest.OfficeApp.DisplayName[0]
 }
 
+export function getAddinAppId(manifest: Manifest) {
+    return manifest.OfficeApp.Id
+}
+
 export function getResources(manifest: Manifest) {
     const ver11Overrides = getVersion11Overrides(manifest)
     return ver11Overrides.Resources[0]

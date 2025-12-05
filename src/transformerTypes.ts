@@ -9,9 +9,13 @@ export type ServerConfig = Readonly<{
     serverPath: string
 }>
 
+export type AddinConfig = Readonly<{
+    addinAppId: string
+}>
+
 export type AzureConfig = Readonly<{
     azureAppId: string
     azureAppUri: string
 }>
 
-export type Config = PathConfig & ServerConfig & AzureConfig
+export type Config = PathConfig & ServerConfig & AddinConfig & AzureConfig

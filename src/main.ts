@@ -18,6 +18,7 @@ export async function run(): Promise<void> {
             core.getInput("webappPath", { required: true })
         )
 
+        const addinAppId = core.getInput("addinAppId", { required: true })
         const azureAppId = core.getInput("azureAppId", { required: false })
         const azureAppUri = core.getInput("azureAppUri", { required: false })
 
@@ -27,6 +28,7 @@ export async function run(): Promise<void> {
             serverHost,
             serverPort,
             serverPath,
+            addinAppId,
             azureAppId,
             azureAppUri
         }

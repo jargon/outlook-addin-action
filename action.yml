@@ -24,6 +24,9 @@ inputs:
     webappPath:
         description: Server path where the Outlook webapp is hosted
         required: true
+    addinAppId:
+        description: Office addin ID
+        required: true
     azureAppId:
         description: Application ID for the Azure app registration for the addin
         required: false

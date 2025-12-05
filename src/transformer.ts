@@ -3,7 +3,12 @@ import * as path from "node:path"
 import xml2js from "xml2js"
 import * as core from "@actions/core"
 import { Manifest, ResourceUrl, WebApplicationInfo } from "./manifestTypes.js"
-import { AzureConfig, Config, ServerConfig } from "./transformerTypes.js"
+import {
+    AddinConfig,
+    AzureConfig,
+    Config,
+    ServerConfig
+} from "./transformerTypes.js"
 import {
     printAddinInfo,
     printAzureInfo,
@@ -27,7 +32,8 @@ export async function transformManifest(config: Config) {
     const parser = new xml2js.Parser()
     const manifest: Manifest = await parser.parseStringPromise(xml)
 
-    printAddinInfo(manifest)
+    core.info(`Transforming Outlook web addin:`)
+    rewriteAddinInfo(manifest, config)
 
     const iconUrls = getIconUrls(manifest)
     rewriteUrls(iconUrls, config)
@@ -52,6 +58,16 @@ export async function transformManifest(config: Config) {
     await fs.writeFile(config.outputPath, transformedXml)
 
     return manifest
+}
+
+function rewriteAddinInfo(manifest: Manifest, config: AddinConfig) {
+    core.info(`Transforming addin info`)
+    printAddinInfo(manifest)
+
+    manifest.OfficeApp.Id = config.addinAppId
+
+    core.info(`Transformed`)
+    printAddinInfo(manifest)
 }
 
 function rewriteUrls(resourceUrls: ResourceUrl[], config: ServerConfig) {
