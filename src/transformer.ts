@@ -50,8 +50,14 @@ export async function transformManifest(config: Config) {
     const resourceUrls = getResourceUrls(manifest)
     rewriteUrls(resourceUrls, config)
 
-    const webappInfo = getWebApplicationInfo(manifest)
-    rewriteWebappInfo(webappInfo, config)
+    if (config.azureAppId || config.azureAppUri) {
+        const webappInfo = getWebApplicationInfo(manifest)
+        rewriteWebappInfo(webappInfo, config)
+    } else {
+        core.info(
+            "No azureAppId or azureAppUri parameter given, skipping web application info"
+        )
+    }
 
     const builder = new xml2js.Builder()
     const transformedXml = builder.buildObject(manifest)
@@ -116,8 +122,12 @@ function rewriteWebappInfo(
     core.info(`Transforming web application info`)
     printAzureInfo(webappInfo)
 
-    webappInfo.Id = config.azureAppId
-    webappInfo.Resource = config.azureAppUri
+    if (config.azureAppId) {
+        webappInfo.Id = config.azureAppId
+    }
+    if (config.azureAppUri) {
+        webappInfo.Resource = config.azureAppUri
+    }
 
     core.info(`Transformed`)
     printAzureInfo(webappInfo)

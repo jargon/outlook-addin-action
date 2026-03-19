@@ -36,6 +36,7 @@ inputs:
     azureAppUri:
         description:
             Application ID URL for the Azure app registration for the addin
+        required: false
 
 # Define your outputs here.
 outputs:

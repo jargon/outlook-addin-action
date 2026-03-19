@@ -16507,7 +16507,7 @@ function bE(A) {
 }
 function va(A) {
   const l = A.OfficeApp, f = pE(A);
-  SA.info("Transforming Outlook web addin:"), SA.info(`    ID: ${l.Id}`), SA.info(`    Name: ${f.$.DefaultValue}`);
+  SA.info("Addin info:"), SA.info(`    ID: ${l.Id}`), SA.info(`    Name: ${f.$.DefaultValue}`);
 }
 function xa(A) {
   SA.info("Azure info:"), SA.info(`    Application ID: ${A.Id}`), SA.info(`    App ID URL: ${A.Resource}`);
@@ -16528,14 +16528,18 @@ async function kE(A) {
   const n = RE(t);
   Yt(n, A);
   const h = NE(t);
-  Yt(h, A);
-  const o = yE(t);
-  UE(o, A);
-  const u = new Ta.Builder().buildObject(t);
-  return await Pi.writeFile(A.outputPath, u), t;
+  if (Yt(h, A), A.azureAppId || A.azureAppUri) {
+    const u = yE(t);
+    UE(u, A);
+  } else
+    SA.info(
+      "No azureAppId or azureAppUri parameter given, skipping web application info"
+    );
+  const c = new Ta.Builder().buildObject(t);
+  return await Pi.writeFile(A.outputPath, c), t;
 }
 function SE(A, l) {
-  SA.info("Transforming addin info"), va(A), A.OfficeApp.Id = l.addinAppId, SA.info("Transformed"), va(A);
+  SA.info("Transforming addin info"), va(A), A.OfficeApp.Id = l.addinAppId, l.addinAppName && (A.OfficeApp.DisplayName[0].$.DefaultValue = l.addinAppName), SA.info("Transformed"), va(A);
 }
 function Yt(A, l) {
   for (const f of A) {
@@ -16555,7 +16559,7 @@ function LE(A, l) {
   }
 }
 function UE(A, l) {
-  SA.info("Transforming web application info"), xa(A), A.Id = l.azureAppId, A.Resource = l.azureAppUri, SA.info("Transformed"), xa(A);
+  SA.info("Transforming web application info"), xa(A), l.azureAppId && (A.Id = l.azureAppId), l.azureAppUri && (A.Resource = l.azureAppUri), SA.info("Transformed"), xa(A);
 }
 function ME(A, l) {
   const f = new URL(A);
@@ -16571,17 +16575,18 @@ async function vE() {
   try {
     const A = SA.getInput("manifestPath", { required: !0 }), l = SA.getInput("outputPath", { required: !0 }), f = SA.getInput("webappHost", { required: !0 }), g = SA.getInput("webappPort", { required: !1 }), t = xE(
       SA.getInput("webappPath", { required: !0 })
-    ), r = SA.getInput("addinAppId", { required: !0 }), e = SA.getInput("azureAppId", { required: !1 }), a = SA.getInput("azureAppUri", { required: !1 }), n = {
+    ), r = SA.getInput("addinAppId", { required: !0 }), e = SA.getInput("addinAppName", { required: !1 }), a = SA.getInput("azureAppId", { required: !1 }), n = SA.getInput("azureAppUri", { required: !1 }), h = {
       manifestPath: A,
       outputPath: l,
       serverHost: f,
       serverPort: g,
       serverPath: t,
       addinAppId: r,
-      azureAppId: e,
-      azureAppUri: a
+      addinAppName: e,
+      azureAppId: a,
+      azureAppUri: n
     };
-    await kE(n), SA.setOutput("outputPath", n.outputPath);
+    await kE(h), SA.setOutput("outputPath", h.outputPath);
   } catch (A) {
     A instanceof Error && SA.setFailed(A.message);
   }
